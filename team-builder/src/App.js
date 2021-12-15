@@ -1,22 +1,47 @@
-import logo from './logo.svg';
 import './App.css';
+import Form from './Form';
+import React, { useState } from 'react';
+
+const initialFormValues = {
+  username: '',
+  email: '',
+  role: '',
+}
 
 function App() {
+  const [teammates, setTeammates] = useState([]);
+  const [formValues, setFormValues] = useState([initialFormValues]);
+  const [error, setError] = useState('');
+
+  const updateForm = (inputName, inputValue) => {
+    setFormValues({ ...formValues, [inputName]: inputValue });
+  }
+
+  const submitForm = () => {
+    const newTeam = {
+      username: formValues.username.trim(),
+      email: formValues.email.trim(),
+      role: formValues.role
+      }
+
+    if (!newTeam.username || !newTeam.email || !newTeam.role) {
+      setError("All fields are required, ya chump!!!");
+    } else {
+      setTeammates(teammates.concat(newTeam));
+      setFormValues(initialFormValues);
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+       <h1>Teammates</h1>
+       <h2>{error}</h2>
+       <Form
+        values={formValues}
+        update={updateForm}
+        submit={submitForm}
+       />
       </header>
     </div>
   );
